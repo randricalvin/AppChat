@@ -10,7 +10,7 @@ const Dashboard = () => {
           <SlideBar />
         </div>
         <div className="w-2/3 flex items-end">
-        <Chat />
+          <Chat />
         </div>
       </div>
     </div>
