@@ -1,23 +1,27 @@
 import React from 'react'
+import logout from '../assets/logout.svg'
 
 const NavBar = () => {
   return (
-    <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold ml-2 text-white">My AppChat</h1>
-        <div
-          className="flex py-4 px-2 justify-start items-center"
-        >
-          <div className="">
-            <img
-              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-              className="object-cover h-8 w-8 rounded-full"
-              alt=""
-            />
-          </div>
-          <div className="mx-4">
-            <div className="text-lg font-semibold text-white">John Doe</div>
-          </div>
+    <div className="flex items-center justify-around h-14 bg-sky-800 rounded-t-lg">
+        <h1 className="text-lg font-bold text-white">My AppChat</h1>
+        
+        <div className="flex justify-center">
+          <div>
+              <img
+                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                className="object-cover h-6 w-6 rounded-full"
+                alt=""
+              />
+            </div>
+            <div className="mx-2">
+              <div className="text-m font-semibold text-white">John Doe</div>
+            </div>
         </div>
+
+        <button>
+          <img src={logout} alt="logout" className="w-6 h-6" />
+        </button>
       </div>
   )
 }

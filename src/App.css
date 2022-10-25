@@ -14,3 +14,15 @@
   display: flex;
   height: 80vh;
 }
+
+.messages {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
