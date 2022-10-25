@@ -1,20 +1,25 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import add from '../assets/add.svg'
+import { auth, db, storage } from '../firebase'
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, storage, db } from '../firebase'
 import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore";
 
 
 
 const Register = () => {
-  const [error, setError] = useState(false)
+  const [err, setErr] = useState(false)
+  // const [displayName, setDisplayName] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [password, setPassword] = useState('')
+  // const [file, setFile] = useState(null)
   // const navigate = useNavigate ()
 
   // User registration
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // find the data from the form
     const displayName = e.target[0].value
     const email = e.target[1].value
     const password = e.target[2].value
@@ -22,29 +27,31 @@ const Register = () => {
 
 
     try {
+    const res = await createUserWithEmailAndPassword(auth, email, password)
+    
+    const user = res.user
+    const uid = res.user.uid
 
-    const res = createUserWithEmailAndPassword(auth, email, password)
-
-    // Upload image user to firebase storage for registration
+    // Upload image to firebase storage for registration
     const storageRef = ref(storage, displayName)
 
     const uploadTask = uploadBytesResumable(storageRef, file);
-  
-    uploadTask.on('state_changed',
+    
+    uploadTask.on(
       (error) => {
-        setError(true)
+        setErr(true)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
-          await updateProfile(res.user, {
-            displayName,
+          await updateProfile(user, {
+            name: displayName,
             photoURL: downloadURL,
           });
-          // Add a user in database (firestore)
-          await setDoc(doc(db, "users", res.user.uid), {
-            uid: res.user.uid,
-            displayName,
-            email,
+          // Add a users in collection in firestore
+          await setDoc(doc(db, "users", uid), {
+            uid: uid,
+            name: displayName,
+            email: email,
             photoURL: downloadURL,
           });
           // Add a userchats in database (firestore)
@@ -54,8 +61,9 @@ const Register = () => {
         });
       }
     );
-    } catch(error) {
-      setError(true)
+    } catch(err) {
+      setErr(true)
+      console.log(err)
     }
 }
 
@@ -73,7 +81,8 @@ const Register = () => {
                       <div>
                           <label htmlFor="text" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Display name</label>
                           <input 
-                          type="text"  
+                          type="text" 
+                          name="text"
                           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                           placeholder="display name" 
                           />
@@ -81,7 +90,8 @@ const Register = () => {
                       <div>
                           <label htmlFor="email" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                           <input 
-                          type="email" 
+                          type="email"
+                          name="email"
                           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                           placeholder="name@company.com" 
                           />
@@ -89,7 +99,8 @@ const Register = () => {
                       <div>
                           <label htmlFor="password" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                           <input 
-                          type="password" 
+                          type="password"
+                          name="password"
                           placeholder="password" 
                           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                           />
@@ -103,17 +114,18 @@ const Register = () => {
                           </label>
                           <input 
                           type="file" 
-                          id="file" 
+                          id="file"
+                          name="file"
                           style={{display: 'none'}}
                           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                           />
                       </div>
                       <button 
-                      type="submit" 
+                      type="submit"
                       className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Create an account
                       </button>
-                      {error && <p className="text-red-500 text-xs italic">Something went wrong</p>}
+                      {err && <p className="text-red-500 text-xs italic">Something went wrong</p>}
                     </form>
                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                         Already have an account? <Link to='/login' className="text-sky-600 font-medium text-primary-600 hover:text-sky-700 hover:underline dark:text-primary-500">Login here</Link>
