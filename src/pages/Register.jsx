@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import add from '../assets/add.svg'
-import { auth, db, storage } from '../firebase'
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, storage, db } from '../firebase'
 import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -10,11 +10,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
   const [err, setErr] = useState(false)
-  // const [displayName, setDisplayName] = useState('')
-  // const [email, setEmail] = useState('')
-  // const [password, setPassword] = useState('')
-  // const [file, setFile] = useState(null)
-  // const navigate = useNavigate ()
+  const navigate = useNavigate ()
 
   // User registration
   const handleSubmit = async (e) => {
@@ -28,35 +24,47 @@ const Register = () => {
 
     try {
     const res = await createUserWithEmailAndPassword(auth, email, password)
+    console.log(res)
     
     const user = res.user
     const uid = res.user.uid
 
     // Upload image to firebase storage for registration
     const storageRef = ref(storage, displayName)
-
+    
     const uploadTask = uploadBytesResumable(storageRef, file);
     
-    uploadTask.on(
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case 'paused':
+          console.log('Upload is paused');
+          break;
+        case 'running':
+          console.log('Upload is running');
+          break;
+      }
+      },
       (error) => {
         setErr(true)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
           await updateProfile(user, {
-            name: displayName,
+            displayName,
             photoURL: downloadURL,
           });
           // Add a users in collection in firestore
           await setDoc(doc(db, "users", uid), {
             uid: uid,
-            name: displayName,
-            email: email,
+            displayName,
+            email,
             photoURL: downloadURL,
           });
           // Add a userchats in database (firestore)
-          // await setDoc(doc(db, "userchats", res.user.uid), {});
-          //   navigate("/dashboard")
+          await setDoc(doc(db, "userchats", uid), {});
+            navigate("/dashboard")
           
         });
       }
