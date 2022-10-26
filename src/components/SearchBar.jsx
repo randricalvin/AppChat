@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc } from "firebase/firestore";
 import { db } from '../firebase'
+import { AuthContext } from '../contexts/AuthContext'
 
 const SearchBar = () => {
   const [userName, setUserName] = useState('')
   const [user, setUser] = useState(null)
   const [err, setErr] = useState(false)
+
+  const { currentUser } = useContext(AuthContext);
 
   const handleSearch = async() => {
   // Search for a user in the database
@@ -25,6 +28,28 @@ const SearchBar = () => {
   const handleKey = (e) => {
     e.code === 'Enter' && handleSearch()
   }
+
+  // Select a user search result
+  const handleSelect = async() => {
+    //  Check the group chat in firestore exists, if not create it
+    const combinedId = currentUser.uid > user.id ? currentUser.uid + user.id : user.id + currentUser.uid;
+    
+    try {
+      const res = await getDocs (db, "chats", combinedId)
+
+      if (!res.exists) {
+        // Create a chat in chats collection
+        await setDoc(doc,(db, "chats", combinedId), {message: []})
+
+        // Create a user chats
+      }
+    }
+    catch(err) {
+      setErr(true)
+      console.log(err)
+    }
+
+    //  Create user chats
 
 
   return (
