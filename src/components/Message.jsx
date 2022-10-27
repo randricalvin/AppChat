@@ -1,40 +1,68 @@
-import React from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
+import { AuthContext } from '../context/AuthContext'
+import { ChatContext } from '../context/ChatContext'
 
-const Message = () => {
+const Message = ({message}) => {
+  const { currentUser } = useContext(AuthContext);
+  const { data } = useContext(ChatContext);
+
+  const ref = useRef()
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [message])
+
+
+console.log(message)
   return (
-    <div className='message'>
-      <div className="px-5 flex flex-col">
+    <div ref={ref} className={`message ${message.senderId === currentUser.uid && "owner"}`}>
+      <div>
+        <img src={message.senderId === currentUser.uid 
+                ? currentUser.photoURL 
+                : data.user.photoURL} 
+                alt="" 
+                className="object-cover h-8 w-8 rounded-full"
+                />
+
+        <span>just now</span>
+      </div>
+      <div>
+        <p>{message.text}</p>
+        {message.image && <img 
+        src={message.image} 
+        alt=""
+        className='w-1/2 object-cover' />}
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      {/* <div className="px-5 flex flex-col">
         <div className="flex flex-col mt-5">
           <div className="flex justify-end mb-4">
-            <div
+            <img
+              src={message.senderId === currentUser.uid 
+                ? currentUser.photoURL 
+                : data.user.photoURL}
+              className="object-cover h-8 w-8 rounded-full"
+              alt=""
+            />
+            <p
               className="mr-2 py-3 px-4 bg-sky-600 rounded-bl-3xl rounded-tl-3xl rounded-br-xl text-white"
             >
-              Welcome to group everyone !
-            </div>
-            <img
-              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+              {message.text}
+            </p>
+          </div>
+            {message.image && <img
+              src={message.image}
               className="object-cover h-8 w-8 rounded-full"
               alt=""
-            />
-          </div>
-
-          <div className="flex justify-start mb-4">
-            <img
-              src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-              className="object-cover h-8 w-8 rounded-full"
-              alt=""
-            />
-            <div
-              className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-bl-xl text-white"
-            >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat
-              at praesentium, aut ullam delectus odio error sit rem. Architecto
-              nulla doloribus laborum illo rem enim dolor odio saepe,
-              consequatur quas?
-            </div>
-          </div>
+            />}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
