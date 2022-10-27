@@ -1,7 +1,30 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+
 
 const Login = () => {
+  const [err, setErr] = useState(false)
+  const navigate = useNavigate()
+
+  // User registration
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // User connect to the login page
+    const email = e.target[0].value
+    const password = e.target[1].value
+
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      navigate('/dashboard')
+    } catch(err) {
+      setErr(true)
+      console.log(err)
+    }
+}
+
   return (
     <div>
       <section className="bg-[#a7bcff] dark:bg-gray-900">
@@ -11,9 +34,9 @@ const Login = () => {
                     <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         My AppChat
                     </h1>
-                    <form className="space-y-4 md:space-y-6" action="#">
+                    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                       <div>
-                          <label for="email" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                          <label htmlFor="email" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                           <input 
                           type="email" 
                           name="email" 
@@ -23,7 +46,7 @@ const Login = () => {
                           required/>
                       </div>
                       <div>
-                          <label for="password" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                          <label htmlFor="password" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                           <input 
                           type="password" 
                           name="password" 
@@ -37,6 +60,7 @@ const Login = () => {
                       className="w-full text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Sign in
                       </button>
+                      {err && <p className="text-red-500 text-xs italic">Something went wrong</p>}
                       <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                           Don't have an account? <Link to='/register' className="text-sky-600 font-medium text-primary-600 hover:text-sky-700 hover:underline dark:text-primary-500">Create an account</Link>
                       </p>
