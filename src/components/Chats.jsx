@@ -33,7 +33,7 @@ const Chats = () => {
   return (
     <div>
       {Object.entries(chats)?.sort((a,b) => b[1].date - a[1].date).map((chat) => (
-          <div className="flex py-4 px-2 justify-start items-center hover:bg-sky-600 border-b-2 cursor-pointer" key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
+          <div className="flex py-4 px-2 justify-start items-center hover:bg-sky-600 border-b-2 duration-200 cursor-pointer" key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
               <img
                 src={chat[1].userInfo.photoURL}
                 className="object-cover h-10 w-10 rounded-full"
@@ -41,7 +41,7 @@ const Chats = () => {
               />
             <div className="mx-4">
               <div className="text-m font-semibold text-white">{chat[1].userInfo.displayName}</div>
-              <p className="text-white">{chat[1].lastMessage?.text}</p>
+              <p className="text-white">{chat[1].lastMessage?.text.substring(0, 40)}</p>
             </div>
           </div>
       ))}

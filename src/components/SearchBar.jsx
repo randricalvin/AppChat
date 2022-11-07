@@ -82,7 +82,7 @@ const SearchBar = () => {
     <div className='flex flex-col justify-center'>
       <div className='flex justify-center'>
           <input
-          className="bg-lightGrey my-4 h-10 lg:w-full md:w-full sm:w-2/3 pl-5 text-m focus:outline-none rounded-lg"
+          className="bg-lightGrey my-4 mx-3 h-10 lg:w-full md:w-full sm:w-2/3 pl-5 text-m focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-2 duration-300"
           name="search"
           type="search"
           placeholder="Find an user"

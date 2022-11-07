@@ -15,55 +15,21 @@ const Message = ({message}) => {
 
 console.log(message)
   return (
-    <div ref={ref} className={`message ${message.senderId === currentUser.uid && "owner"}`}>
-      <div>
-        <img src={message.senderId === currentUser.uid 
-                ? currentUser.photoURL 
-                : data.user.photoURL} 
-                alt="" 
-                className="object-cover h-8 w-8 rounded-full"
-                />
-
-        <span>just now</span>
-      </div>
-      <div>
-        <p>{message.text}</p>
-        {message.image && <img 
-        src={message.image} 
-        alt=""
-        className='w-1/2 object-cover' />}
-      </div>
-      
-      
-      
-      
-      
-      
-      
-      {/* <div className="px-5 flex flex-col">
-        <div className="flex flex-col mt-5">
-          <div className="flex justify-end mb-4">
-            <img
-              src={message.senderId === currentUser.uid 
-                ? currentUser.photoURL 
-                : data.user.photoURL}
-              className="object-cover h-8 w-8 rounded-full"
-              alt=""
-            />
-            <p
-              className="mr-2 py-3 px-4 bg-sky-600 rounded-bl-3xl rounded-tl-3xl rounded-br-xl text-white"
-            >
-              {message.text}
-            </p>
+    <div ref={ref} className={`flex flex-col w-full px-5 my-5 ${message.senderId === currentUser.uid ? 'items-end' : 'items-start'}`}>
+        <div className={`flex ${message.senderId === currentUser.uid ? "flex-row-reverse" : "flex"}`}>
+          <div>
+            <img src={message.senderId === currentUser.uid 
+                    ? currentUser.photoURL 
+                    : data.user.photoURL} 
+                    alt="" 
+                    className="object-cover h-8 w-8 rounded-full" />
           </div>
-            {message.image && <img
-              src={message.image}
-              className="object-cover h-8 w-8 rounded-full"
-              alt=""
-            />}
+          <div className='w-5/6'>
+            <p className={`flex text-white px-4 py-2 ${message.text ? 'bg-sky-600' : 'bg-transparent'} ${message.senderId === currentUser.uid ? 'mr-2 py-3 px-4 bg-sky-600 rounded-bl-3xl rounded-tl-3xl rounded-br-xl text-white ' : 'ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-bl-xl text-white'}`}>{message.text}</p>
+            {message.image && <img src={message.image} alt="" className="w-60 h-60 rounded-lg object-cover" />}
+          </div>
         </div>
-      </div> */}
-    </div>
+      </div>
   )
 }
 

@@ -1,29 +1,23 @@
 import React, { useContext } from 'react'
-import logout from '../assets/logout.svg'
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
+import chatchatgopicto from '../assets/chatchatgopicto.svg'
 
 const NavBar = () => {
-  const navigate = useNavigate()
 
   const { currentUser } = useContext(AuthContext);
 
-  // User logout
-  const handleLogout =  () => {
-    signOut(auth)
-    navigate('/login')
-  }
   return (
-    <div className="flex items-center justify-around h-14 bg-sky-800 rounded-t-lg">
-        <h1 className="text-lg font-bold text-white">My AppChat</h1>
-        
-        <div className="flex justify-center">
-          <div>
+    <div className="flex py-2 items-center justify-between px-5 bg-sky-800">
+        <img 
+            src={chatchatgopicto}
+            alt="chatchatgologo"
+            className="w-8 h-8 objective-cover">
+            </img>
+        <div className="flex justify-center items-center">
+          <div className="object-cover h-8 w-8 rounded-full">
               <img
                 src={currentUser.photoURL}
-                className="object-cover h-6 w-6 rounded-full"
+                className="rounded-full"
                 alt=""
               />
             </div>
@@ -32,11 +26,7 @@ const NavBar = () => {
                 {currentUser.displayName}
               </div>
             </div>
-        </div>
-        {/* button sign out to send in the login page */}
-        <button onClick={handleLogout}>
-          <img src={logout} alt="logout" className="h-6 w-6"/>
-        </button>
+        </div>     
       </div>
   )
 }
