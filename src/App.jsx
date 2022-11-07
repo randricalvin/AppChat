@@ -23,7 +23,10 @@ function App() {
             <Home />
           </ProtectedRoute>
           } />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+          } />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>

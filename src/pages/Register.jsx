@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, storage, db } from '../firebase'
 import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import chatchatgologo from '../assets/chatchatgologo.svg'
 
 
 
@@ -78,13 +79,17 @@ const Register = () => {
 
   return (
     <div>
-      <section className="bg-[#a7bcff] dark:bg-gray-900">
+      <section className="bg-[#0369a1] dark:bg-gray-900 register">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                    <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        My AppChat
-                    </h1>
+                <div className='flex justify-center'>
+                    <img 
+                    src={chatchatgologo}
+                    alt="chatchatgologo"
+                    className="w-32 h-32">
+                    </img>
+                  </div>
                     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                       <div>
                           <label htmlFor="text" className="flex mb-2 text-sm font-medium text-gray-900 dark:text-white">Display name</label>
