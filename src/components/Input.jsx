@@ -6,7 +6,6 @@ import { ChatContext } from '../context/ChatContext'
 import { db, storage } from '../firebase'
 import { v4 as uuid } from 'uuid';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
-import EmojiPicker from 'emoji-picker-react'
 
 
 const Input = () => {
@@ -30,14 +29,6 @@ const Input = () => {
       uploadTask.on('state_changed', (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
-        switch (snapshot.state) {
-          case 'paused':
-            console.log('Upload is paused');
-            break;
-          case 'running':
-            console.log('Upload is running');
-            break;
-        }
       },
         (error) => {
           // setErr(true)
